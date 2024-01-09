@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const axios = require('axios'); 
 
 const client = new Discord.Client({
     intents: [
@@ -27,6 +26,7 @@ const discordLogin = async () => {
     }
 }
 
+
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
@@ -35,52 +35,39 @@ client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
   if (message.content.startsWith('!연말정산')) {
-    // JSON 데이터 생성
-    const jsonData = {
-      username: message.author.username,
-      userID: message.author.id,
-      messageContent: message.content.substring(6), 
+
+    const userQuestion = message.content.slice(6).trim();
+
+    const data = {
+        question: userQuestion,
     };
 
-    console.log(jsonData);
-
-    const jsonChannel = message.guild.channels.cache.find(
-        (channel) => channel.name === '연말정산도우미' 
-    );
-
-    // jsonChannel.startTyping();
-
-    const apiEndpoint = process.env.API_ENDPOINT; 
-
-    console.log(apiEndpoint);
-
     try {
-      const response = await axios.post(apiEndpoint, jsonData);
-
-      console.log(response);
-
-      if (!jsonChannel) {
-        message.reply('JSON 채널을 찾을 수 없습니다.');
-        // jsonChannel.stopTyping();
-        return;
-      }
-
-      jsonChannel.send('API 응답:', {
-        embed: {
-          description: '```json\n' + JSON.stringify(response.data, null, 2) + '\n```',
-        },
-      });
-
-      console.log(response.data);
-
-    //   jsonChannel.stopTyping();
+        const apiResponse = await query(data);
+        
+        message.channel.send(`API Response: ${JSON.stringify(apiResponse)}`);
     } catch (error) {
-      console.error('Error sending request to API:', error);
-      message.reply('API 요청 중 오류가 발생했습니다.');
-    //   jsonChannel.stopTyping();
+        console.error('Error occurred:', error);
+        message.channel.send('Error occurred while processing your request.');
     }
   }
 });
+
+async function query(data) {
+    const apiEndpoint = process.env.API_ENDPOINT; 
+    const response = await fetch(
+        apiEndpoint,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        }
+    );
+    const result = await response.json();
+    return result;
+}
 
 // client.login(process.env.DISCORD_BOT_TOKEN);
 discordLogin();
