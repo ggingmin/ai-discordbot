@@ -34,7 +34,7 @@ client.on('ready', () => {
 client.on('message', async (message) => {
   if (message.author.bot) return;
 
-  if (message.content.startsWith('!sendjson')) {
+  if (message.content.startsWith('!연말정산')) {
     // JSON 데이터 생성
     const jsonData = {
       username: message.author.username,
