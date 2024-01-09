@@ -39,12 +39,12 @@ client.on('messageCreate', async (message) => {
     const jsonData = {
       username: message.author.username,
       userID: message.author.id,
-      messageContent: message.content.substring(10), 
+      messageContent: message.content.substring(6), 
     };
 
     console.log(jsonData);
 
-    message.channel.startTyping();
+    jsonChannel.startTyping();
 
     const apiEndpoint = process.env.API_ENDPOINT; 
 
@@ -56,14 +56,14 @@ client.on('messageCreate', async (message) => {
       console.log(response);
 
       const jsonChannel = message.guild.channels.cache.find(
-        (channel) => channel.name === 'json-channel' 
+        (channel) => channel.name === '연말정산도우미' 
       );
 
       console.log(jsonChannel);
 
       if (!jsonChannel) {
         message.reply('JSON 채널을 찾을 수 없습니다.');
-        message.channel.stopTyping();
+        jsonChannel.stopTyping();
         return;
       }
 
@@ -75,11 +75,11 @@ client.on('messageCreate', async (message) => {
 
       console.log(response.data);
 
-      message.channel.stopTyping();
+      jsonChannel.stopTyping();
     } catch (error) {
       console.error('Error sending request to API:', error);
       message.reply('API 요청 중 오류가 발생했습니다.');
-      message.channel.stopTyping();
+      jsonChannel.stopTyping();
     }
   }
 });
