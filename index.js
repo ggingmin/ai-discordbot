@@ -1,7 +1,31 @@
 const Discord = require('discord.js');
 const axios = require('axios'); 
 
-const client = new Discord.Client();
+const client = new Discord.Client({
+    intents: [
+        Discord.GatewayIntentBits.Guilds,
+        Discord.GatewayIntentBits.GuildMessages,
+        Discord.GatewayIntentBits.MessageContent,
+    ],
+});
+
+const sleep = (ms) => {
+    return new Promise((r) => setTimeout(r, ms));
+}
+
+if (process.env.DISCORD_BOT_TOKEN == null) {
+    console.log("An discord token is empty.");
+    sleep(60000).then(() => console.log("Service is getting stopped automatically"));
+}
+
+const discordLogin = async () => {
+    try {
+        await client.login(process.env.DISCORD_BOT_TOKEN);
+    } catch (TOKEN_INVALID) {
+        console.log("An invalid token was provided");
+        sleep(60000).then(() => console.log("Service is getting stopped automatically"));
+    }
+}
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
@@ -49,4 +73,5 @@ client.on('message', async (message) => {
   }
 });
 
-client.login(process.env.DISCORD_BOT_TOKEN);
+// client.login(process.env.DISCORD_BOT_TOKEN);
+discordLogin();
