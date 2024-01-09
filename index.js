@@ -44,9 +44,8 @@ client.on('messageCreate', async (message) => {
 
     try {
         const apiResponse = await query(data);
-        const apiObject = JSON.parse(apiResponse)
-
-        message.channel.send(`연말정산봇: ${apiObject.text}`);
+        
+        message.channel.send(`연말정산봇: ${apiResponse.text}`);
     } catch (error) {
         console.error('Error occurred:', error);
         message.channel.send('Error occurred while processing your request.');
