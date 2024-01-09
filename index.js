@@ -39,7 +39,7 @@ client.on('message', async (message) => {
     const jsonData = {
       username: message.author.username,
       userID: message.author.id,
-      messageContent: message.content.substring(10), 
+      messageContent: message.content, 
     };
 
     message.channel.startTyping();
