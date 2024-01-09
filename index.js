@@ -44,10 +44,11 @@ client.on('messageCreate', async (message) => {
 
     try {
         const apiResponse = await query(data);
-        
+        message.channel.sendTyping();
         message.channel.send(`🤖연말정산봇: ${apiResponse.text}`);
     } catch (error) {
         console.error('Error occurred:', error);
+        message.channel.sendTyping();
         message.channel.send('Error occurred while processing your request.');
     }
   }
