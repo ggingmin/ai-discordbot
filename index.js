@@ -42,16 +42,25 @@ client.on('message', async (message) => {
       messageContent: message.content, 
     };
 
+    console.log(jsonData);
+
     message.channel.startTyping();
 
-    const apiEndpoint = process.env.API_ENDPOINT; // 실제 API endpoint URL로 변경
+    const apiEndpoint = process.env.API_ENDPOINT; 
+
+    console.log(apiEndpoint);
 
     try {
       const response = await axios.post(apiEndpoint, jsonData);
 
+      console.log(response);
+
       const jsonChannel = message.guild.channels.cache.find(
-        (channel) => channel.name === 'json-channel' // 채널 이름으로 변경
+        (channel) => channel.name === 'json-channel' 
       );
+
+      console.log(jsonChannel);
+
       if (!jsonChannel) {
         message.reply('JSON 채널을 찾을 수 없습니다.');
         message.channel.stopTyping();
@@ -63,6 +72,8 @@ client.on('message', async (message) => {
           description: '```json\n' + JSON.stringify(response.data, null, 2) + '\n```',
         },
       });
+
+      console.log(response.data);
 
       message.channel.stopTyping();
     } catch (error) {
