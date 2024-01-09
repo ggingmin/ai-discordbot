@@ -44,6 +44,10 @@ client.on('messageCreate', async (message) => {
 
     console.log(jsonData);
 
+    const jsonChannel = message.guild.channels.cache.find(
+        (channel) => channel.name === '연말정산도우미' 
+    );
+
     jsonChannel.startTyping();
 
     const apiEndpoint = process.env.API_ENDPOINT; 
@@ -54,12 +58,6 @@ client.on('messageCreate', async (message) => {
       const response = await axios.post(apiEndpoint, jsonData);
 
       console.log(response);
-
-      const jsonChannel = message.guild.channels.cache.find(
-        (channel) => channel.name === '연말정산도우미' 
-      );
-
-      console.log(jsonChannel);
 
       if (!jsonChannel) {
         message.reply('JSON 채널을 찾을 수 없습니다.');
